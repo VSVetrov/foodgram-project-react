@@ -1,17 +1,13 @@
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
-from rest_framework import filters, generics, permissions, status, viewsets
+from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from rest_framework.authtoken.models import Token
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny
 
-from . utils import send_confirmation_code
 from . serializers import (TagSerializer, IngredientSerializer,
                            RecipesSerializer, FavoriteSerializer,
                            ShoppingCartSerializer)
-from . models import Ingredient, Reciepes, User, Tag
+from . models import Ingredient, Reciepes, Tag
 from . permissions import IsAuthorOrReadOnly
 from . filters import IngredientSearchFilter, RecipeFilter
 from .pagination import CustomPageNumberPagination
