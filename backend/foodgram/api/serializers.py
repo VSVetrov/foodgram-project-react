@@ -1,12 +1,17 @@
 from rest_framework import serializers
 
-from . models import Ingredient, Reciepes, Tag
-#from users.serializers import CustomUserSerializer
+from users.serializers import CustomUserSerializer
+
+from .models import (Favorite, Ingredient, IngredientAmount, Reciepes,
+                     ShoppingCart, Tag)
 
 
 class TagSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для тегов
+    """
     name = serializers.CharField()
-    slug = serializers.SlugRelatedField(slug_field='slug')
+    slug = serializers.SlugRelatedField(slug_field='slug', read_only=True)
 
     class Meta:
         model = Tag
@@ -15,6 +20,9 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для ингредиентов
+    """
     name = serializers.CharField()
     amount = serializers.IntegerField() 
 
@@ -24,9 +32,70 @@ class IngredientSerializer(serializers.ModelSerializer):
         read_only_fields = '__all__'
 
 
+
+class IngredientAmountSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для вывода количества ингредиентов
+    """
+    id = serializers.ReadOnlyField(source='ingredient.id')
+    name = serializers.ReadOnlyField(source='ingredient.name')
+    measurement_unit = serializers.ReadOnlyField(
+        source='ingredient.measurement_unit'
+    )
+
+    class Meta:
+        model = IngredientAmount
+        fields = ('id', 'name', 'measurement_unit', 'amount')
+
+
+class RecipeListSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для отображения рецептов
+    """
+    tags = TagSerializer(many=True, read_only=True)
+    author = CustomUserSerializer(read_only=True)
+    ingredients = serializers.SerializerMethodField(read_only=True)
+    is_favorited = serializers.SerializerMethodField(read_only=True)
+    is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Reciepes
+        fields = '__all__'
+
+    def get_ingredients(self, obj):
+        queryset = IngredientAmount.objects.filter(recipe=obj)
+        return IngredientAmountSerializer(queryset, many=True).data
+
+    def get_is_favorited(self, obj):
+        request = self.context.get('request')
+        if not request or request.user.is_anonymous:
+            return False
+        return Favorite.objects.filter(user=request.user, recipe=obj).exists()
+
+    def get_is_in_shopping_cart(self, obj):
+        request = self.context.get('request')
+        if not request or request.user.is_anonymous:
+            return False
+        return ShoppingCart.objects.filter(
+            user=request.user, recipe=obj).exists()
+
+
+class AddIngredientSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для добавления Ингредиентов
+    """
+    id = serializers.PrimaryKeyRelatedField(
+        queryset=Ingredient.objects.all())
+    amount = serializers.IntegerField()
+
+    class Meta:
+        model = IngredientAmount
+        fields = ('id', 'amount')
+
+
 class RecipesSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
-    #author = CustomUserSerializer(read_only=True)
+    author = CustomUserSerializer(read_only=True)
     cooking_time = serializers.IntegerField()
     
     class Meta:
