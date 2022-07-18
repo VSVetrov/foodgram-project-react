@@ -1,7 +1,6 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.html import format_html
-
 from users.models import User
 
 
@@ -44,7 +43,7 @@ class Ingredient(models.Model):
         return f'{self.name}, {self.measurement_unit}'
 
 
-class Reciepes(models.Model):
+class Recipes(models.Model):
     author = models.ForeignKey(
         User,
         verbose_name='Автор',
@@ -70,7 +69,7 @@ class Reciepes(models.Model):
         validators=(
             MinValueValidator(
                 1, message='Время должно быть больше 1 минуты'),),
-            help_text='Время приготовления в минутах')
+                help_text='Время приготовления в минутах')
     pub_date = models.DateTimeField(
         'Дата публикации',
         auto_now_add=True
@@ -83,9 +82,11 @@ class Reciepes(models.Model):
 
     def __str__(self):
         return self.username
+
+
 class IngredientAmount(models.Model):
     recipe = models.ForeignKey(
-        Reciepes,
+        Recipes,
         on_delete=models.CASCADE,
         related_name='amounts',
         verbose_name='Рецепт'
@@ -122,7 +123,7 @@ class Favorite(models.Model):
         verbose_name='Пользователь',
     )
     recipe = models.ForeignKey(
-        Reciepes,
+        Recipes,
         on_delete=models.CASCADE,
         related_name='favorites',
         verbose_name='Рецепт',
@@ -145,7 +146,7 @@ class ShoppingCart(models.Model):
         verbose_name='Пользователь',
     )
     recipe = models.ForeignKey(
-        Reciepes,
+        Recipes,
         on_delete=models.CASCADE,
         related_name='carts',
         verbose_name='Рецепт',

@@ -1,8 +1,7 @@
 from rest_framework import serializers
-
 from users.serializers import CustomUserSerializer
 
-from .models import (Favorite, Ingredient, IngredientAmount, Reciepes,
+from .models import (Favorite, Ingredient, IngredientAmount, Recipes,
                      ShoppingCart, Tag)
 
 
@@ -24,13 +23,12 @@ class IngredientSerializer(serializers.ModelSerializer):
     Сериализатор для ингредиентов
     """
     name = serializers.CharField()
-    amount = serializers.IntegerField() 
+    amount = serializers.IntegerField()
 
     class Meta:
         model = Ingredient
         fields = '__all__'
         read_only_fields = '__all__'
-
 
 
 class IngredientAmountSerializer(serializers.ModelSerializer):
@@ -59,7 +57,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
     is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model = Reciepes
+        model = Recipes
         fields = '__all__'
 
     def get_ingredients(self, obj):
@@ -97,11 +95,10 @@ class RecipesSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     author = CustomUserSerializer(read_only=True)
     cooking_time = serializers.IntegerField()
-    
-    class Meta:
-        model = Reciepes
-        fields = '__all__'
 
+    class Meta:
+        model = Recipes
+        fields = '__all__'
 
     def validate(self, data):
         ingredients = data['ingredients']
@@ -143,24 +140,24 @@ class RecipesSerializer(serializers.ModelSerializer):
 class ShortRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Reciepes
+        model = Recipes
         fields = ('id', 'name', 'image', 'cooking_time')
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     cooking_time = serializers.IntegerField()
-    
+
     class Meta:
-        model = Reciepes
-        fields =('id', 'name', 'image', 'cooking_time')
+        model = Recipes
+        fields = ('id', 'name', 'image', 'cooking_time')
 
     def validate(self, data):
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
             return False
         recipe = data['recipe']
-        if Reciepes.objects.filter(user=request.user, recipe=recipe).exists():
+        if Recipes.objects.filter(user=request.user, recipe=recipe).exists():
             raise serializers.ValidationError({
                 'status': 'Рецепт уже есть в избранном!'
             })
@@ -173,14 +170,13 @@ class FavoriteSerializer(serializers.ModelSerializer):
             instance.recipe, context=context).data
 
 
-
 class ShoppingCartSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     cooking_time = serializers.IntegerField()
-    
+
     class Meta:
-        model = Reciepes
-        fields =('id', 'name', 'image', 'cooking_time')
+        model = Recipes
+        fields = ('id', 'name', 'image', 'cooking_time')
 
     def to_representation(self, instance):
         request = self.context.get('request')

@@ -4,28 +4,26 @@ from django_filters.rest_framework import DjangoFilterBackend
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework import viewsets
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 
-from .serializers import (TagSerializer, IngredientSerializer,
-                           RecipesSerializer, FavoriteSerializer,
-                           ShoppingCartSerializer)
-from .models import (Ingredient, Reciepes, Tag, Favorite, IngredientAmount,
-                     ShoppingCart)
-from .permissions import IsAuthorOrReadOnly
 from .filters import IngredientSearchFilter, RecipeFilter
+from .models import (Favorite, Ingredient, IngredientAmount, Recipes,
+                     ShoppingCart, Tag)
 from .pagination import CustomPageNumberPagination
+from .permissions import IsAuthorOrReadOnly
+from .serializers import (FavoriteSerializer, IngredientSerializer,
+                          RecipesSerializer, ShoppingCartSerializer,
+                          TagSerializer)
 
 
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (AllowAny,)
- 
+
 
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
@@ -35,14 +33,13 @@ class IngredientViewSet(viewsets.ModelViewSet):
     search_fields = ('^name',)
 
 
-class ReciepesViewSet(viewsets.ModelViewSet):
-    queryset = Reciepes.objects.all()
+class RecipesViewSet(viewsets.ModelViewSet):
+    queryset = Recipes.objects.all()
     serializer_class = RecipesSerializer
     permission_classes = (IsAuthorOrReadOnly,)
     pagination_class = CustomPageNumberPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilter
-
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
@@ -60,12 +57,12 @@ class ReciepesViewSet(viewsets.ModelViewSet):
     @staticmethod
     def delete_method_for_actions(request, pk, model):
         user = request.user
-        recipe = get_object_or_404(Reciepes, id=pk)
+        recipe = get_object_or_404(Recipes, id=pk)
         model_obj = get_object_or_404(model, user=user, recipe=recipe)
         model_obj.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=True, methods=["POST"],
+    @action(detail=True, methods=['POST'],
             permission_classes=[IsAuthenticated])
     def favorite(self, request, pk):
         return self.post_method_for_actions(
@@ -76,7 +73,7 @@ class ReciepesViewSet(viewsets.ModelViewSet):
         return self.delete_method_for_actions(
             request=request, pk=pk, model=Favorite)
 
-    @action(detail=True, methods=["POST"],
+    @action(detail=True, methods=['POST'],
             permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, pk):
         return self.post_method_for_actions(

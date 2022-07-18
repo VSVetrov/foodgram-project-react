@@ -8,7 +8,7 @@ class CustomUserManager(BaseUserManager):
                     email, password, **other_fields):
 
         if not email:
-            raise ValueError("Укажите email!")
+            raise ValueError('Укажите email!')
 
         email = self.normalize_email(email)
         user = self.model(
@@ -48,6 +48,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'username'
+
 
 class Follow(models.Model):
     user = models.ForeignKey(
