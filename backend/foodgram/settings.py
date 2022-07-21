@@ -7,7 +7,7 @@ SECRET_KEY = 'django-insecure-k#6!_h(=z93uod@vvu=ab#j6lg#m%#!)memeke7v6db8k71&&8
 
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*', '84.252.137.151', 'localhost', 'vsfoodgram.ddns.net']
 
 
 INSTALLED_APPS = [
