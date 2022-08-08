@@ -1,54 +1,70 @@
-from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
-                                        PermissionsMixin, UserManager)
 from django.db import models
+from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.auth.hashers import make_password
 
 
-class CustomUserManager(BaseUserManager):
-    def create_user(self, first_name, last_name,
-                    email, password, **other_fields):
+class CustomUserManager(UserManager):
 
-        if not email:
-            raise ValueError('Укажите email!')
-
+    def _create_user(self, email, password, **extra_fields):
         email = self.normalize_email(email)
-        user = self.model(
-            email=email, first_name=first_name,
-            last_name=last_name, **other_fields
-        )
-
-        user.set_password(password)
-        user.save()
-
+        user = User(email=email, **extra_fields)
+        user.password = make_password(password)
+        user.save(using=self._db)
         return user
 
+    def create_user(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user(email, password, **extra_fields)
 
-class User(AbstractBaseUser, PermissionsMixin):
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        assert extra_fields['is_staff']
+        assert extra_fields['is_superuser']
+        return self._create_user(email, password, **extra_fields)
+
+
+class User(AbstractUser):
     username = models.CharField(
-        'Имя пользователя',
         max_length=150,
         unique=True,
+        verbose_name='Имя пользователя'
     )
     email = models.EmailField(
-        'Электронная почта',
-        max_length=254,
         unique=True,
+        max_length=254,
+        verbose_name='Емейл'
     )
     first_name = models.CharField(
-        'Имя',
         max_length=150,
+        blank=True,
+        null=True,
+        verbose_name='Имя'
     )
     last_name = models.CharField(
-        'Фамилия',
         max_length=150,
+        blank=True,
+        null=True,
+        verbose_name='Фамилия'
     )
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
-
-    objects = UserManager()
+    objects = CustomUserManager()
 
     USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email', 'password']
 
+    class Meta:
+        constraints = [models.UniqueConstraint(
+            fields=['username', 'email'],
+            name='unique_username_email'
+        )]
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+        ordering = ['username']
+
+    def __str__(self):
+        return self.username
 
 class Follow(models.Model):
     user = models.ForeignKey(

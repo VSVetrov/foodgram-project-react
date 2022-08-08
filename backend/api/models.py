@@ -1,8 +1,9 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.html import format_html
-from users.models import User
+from django.contrib.auth import get_user_model   
 
+User = get_user_model()
 
 class Tag(models.Model):
     name = models.CharField(max_length=200, unique=True)
@@ -48,7 +49,7 @@ class Recipes(models.Model):
         User,
         verbose_name='Автор',
         on_delete=models.CASCADE,
-        related_name='recipes',
+        related_name='recipes',        
     )
     name = models.CharField(
         max_length=256,
@@ -89,13 +90,14 @@ class IngredientAmount(models.Model):
         Recipes,
         on_delete=models.CASCADE,
         related_name='amounts',
-        verbose_name='Рецепт'
+        verbose_name='Рецепт'        
     )
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
         related_name='amounts',
         verbose_name='Ингредиент'
+        
     )
     amount = models.PositiveSmallIntegerField(
         'Количество ингредиента',
@@ -120,13 +122,14 @@ class Favorite(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='favorites_user',
-        verbose_name='Пользователь',
+        verbose_name='Пользователь'        
     )
     recipe = models.ForeignKey(
         Recipes,
         on_delete=models.CASCADE,
         related_name='favorites',
         verbose_name='Рецепт',
+        default=''
     )
 
     class Meta:
@@ -143,7 +146,8 @@ class ShoppingCart(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='carts',
-        verbose_name='Пользователь',
+        verbose_name='Пользователь'
+        
     )
     recipe = models.ForeignKey(
         Recipes,

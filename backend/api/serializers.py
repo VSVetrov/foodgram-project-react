@@ -1,14 +1,11 @@
 from rest_framework import serializers
-from users.serializers import CustomUserSerializer
+from users.serializers import UserSerializer
 
 from .models import (Favorite, Ingredient, IngredientAmount, Recipes,
                      ShoppingCart, Tag)
 
 
 class TagSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор для тегов
-    """
     name = serializers.CharField()
     slug = serializers.SlugRelatedField(slug_field='slug', read_only=True)
 
@@ -19,9 +16,6 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор для ингредиентов
-    """
     name = serializers.CharField()
     amount = serializers.IntegerField()
 
@@ -32,13 +26,16 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class IngredientAmountSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор для вывода количества ингредиентов
-    """
     id = serializers.ReadOnlyField(source='ingredient.id')
-    name = serializers.ReadOnlyField(source='ingredient.name')
-    measurement_unit = serializers.ReadOnlyField(
-        source='ingredient.measurement_unit'
+    name = serializers.SlugRelatedField(
+        source='ingredient',
+        read_only=True,
+        slug_field='name'
+    )
+    measurement_unit = serializers.SlugRelatedField(
+        source='ingredient',
+        read_only=True,
+        slug_field='measurement_unit'
     )
 
     class Meta:
@@ -47,11 +44,8 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
 
 
 class RecipeListSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор для отображения рецептов
-    """
     tags = TagSerializer(many=True, read_only=True)
-    author = CustomUserSerializer(read_only=True)
+    author = UserSerializer(read_only=True)
     ingredients = serializers.SerializerMethodField(read_only=True)
     is_favorited = serializers.SerializerMethodField(read_only=True)
     is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)
@@ -79,9 +73,6 @@ class RecipeListSerializer(serializers.ModelSerializer):
 
 
 class AddIngredientSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор для добавления Ингредиентов
-    """
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all())
     amount = serializers.IntegerField()
@@ -93,7 +84,7 @@ class AddIngredientSerializer(serializers.ModelSerializer):
 
 class RecipesSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
-    author = CustomUserSerializer(read_only=True)
+    author = UserSerializer(read_only=True)
     cooking_time = serializers.IntegerField()
 
     class Meta:
