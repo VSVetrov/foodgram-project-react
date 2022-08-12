@@ -45,3 +45,4 @@ tzdata==2022.1
 uritemplate==4.1.1
 urllib3==1.26.9
 psycopg2-binary==2.9.3
+django-extra-fields==3.0.2
