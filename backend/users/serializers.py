@@ -83,7 +83,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
 class ShortRecipeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Recipe
+        model = Recipes
         fields = ('id', 'name', 'image', 'cooking_time')
 
 

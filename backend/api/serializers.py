@@ -120,14 +120,14 @@ class RecipeSerializer(serializers.ModelSerializer):
     def get_is_favorited(self, obj):
         request_user = self.context.get('request').user.id
         queryset = Favorite.objects.filter(
-            user=request_user, recipes=obj.id
+            user=request_user, recipe=obj.id
         ).exists()
         return queryset
 
     def get_is_in_shopping_cart(self, obj):
         request_user = self.context.get('request').user.id
         queryset = ShoppingCart.objects.filter(
-            user=request_user, recipes=obj.id
+            user=request_user, recipe=obj.id
         ).exists()
         return queryset
 
@@ -151,7 +151,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
         user = self.context.get('request').user
         favorite = Favorite.objects.filter(
             user=user.id,
-            recipes=obj.id
+            recipe=obj.id
         )
         return favorite.exists()
 
@@ -159,7 +159,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
         user = self.context.get('request').user
         shopping = ShoppingCart.objects.filter(
             user=user.id,
-            recipes=obj.id
+            recipe=obj.id
         )
         return shopping.exists()
 
