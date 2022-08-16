@@ -1,8 +1,9 @@
-from rest_framework import serializers
-from users.serializers import UserSerializer
-from drf_extra_fields.fields import Base64ImageField
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from drf_extra_fields.fields import Base64ImageField
+from rest_framework import serializers
+
+from users.serializers import UserSerializer
 
 from .models import (Favorite, Ingredient, IngredientAmount, Recipe,
                      ShoppingCart, Tag)
@@ -22,7 +23,8 @@ class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
         fields = '__all__'
-        
+
+
 class IngredientAmountSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source='ingredient.id')
     name = serializers.CharField(source='ingredient.name', read_only=True)

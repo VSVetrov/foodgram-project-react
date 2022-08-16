@@ -1,18 +1,16 @@
 from django.contrib.auth import get_user_model
-from rest_framework.generics import ListAPIView, get_object_or_404
-from djoser.views import UserViewSet as DjoserUserViewSet
 from django_filters.rest_framework import DjangoFilterBackend
+from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import permissions, status
 from rest_framework.decorators import action
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.permissions import (IsAuthenticated,)
-from rest_framework.views import APIView
 
-from api.permissions import IsAuthorOrAdminOrReadOnly
-from .serializers import (SubscriptionSerializer, UserSerializer,
-                         FollowSerializer)
 from api.pagination import CustomPageNumberPagination
+from api.permissions import IsAuthorOrAdminOrReadOnly
+
 from .models import Follow
+from .serializers import SubscriptionSerializer, UserSerializer
 
 User = get_user_model()
 
@@ -23,7 +21,6 @@ class UserViewSet(DjoserUserViewSet):
     filter_backends = (DjangoFilterBackend,)
     pagination_class = CustomPageNumberPagination
     permission_classes = (IsAuthorOrAdminOrReadOnly,)
-
 
     @action(
         detail=False,
@@ -79,42 +76,3 @@ class UserViewSet(DjoserUserViewSet):
             self.perform_destroy(instance)
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-class FollowViewSet(APIView):
-    serializer_class = FollowSerializer
-    permission_classes = [IsAuthenticated]
-    pagination_class = CustomPageNumberPagination
-
-    def post(self, request, *args, **kwargs):
-        user_id = self.kwargs.get('user_id')
-        if user_id == request.user.id:
-            return Response(
-                {'error': 'Нельзя подписаться на себя'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if Follow.objects.filter(
-                user=request.user,
-                author_id=user_id
-        ).exists():
-            return Response(
-                {'error': 'Вы уже подписаны на пользователя'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        author = get_object_or_404(User, id=user_id)
-        Follow.objects.create(
-            user=request.user,
-            author_id=user_id
-        )
-        return Response(
-            self.serializer_class(author, context={'request': request}).data,
-            status=status.HTTP_201_CREATED
-        )
-
-
-class FollowListView(ListAPIView):
-    serializer_class = FollowSerializer
-    permission_classes = [IsAuthenticated]
-    pagination_class = CustomPageNumberPagination
-
-    def get_queryset(self):
-        return User.objects.filter(following__user=self.request.user)

@@ -1,9 +1,10 @@
+from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.html import format_html
-from django.contrib.auth import get_user_model   
 
 User = get_user_model()
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=200, unique=True)
@@ -49,7 +50,7 @@ class Recipe(models.Model):
         User,
         verbose_name='Автор',
         on_delete=models.CASCADE,
-        related_name='recipes',        
+        related_name='recipes',
     )
     name = models.CharField(
         max_length=256,
@@ -75,7 +76,7 @@ class Recipe(models.Model):
         validators=(
             MinValueValidator(
                 1, message='Время должно быть больше 1 минуты'),),
-                help_text='Время приготовления в минутах'
+        help_text='Время приготовления в минутах'
     )
     pub_date = models.DateTimeField(
         'Дата публикации',
@@ -96,14 +97,14 @@ class IngredientAmount(models.Model):
         Recipe,
         on_delete=models.CASCADE,
         related_name='ingredientsamount',
-        verbose_name='Рецепт'        
+        verbose_name='Рецепт'
     )
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
         related_name='ingredientsamount',
         verbose_name='Ингредиент'
-        
+
     )
     amount = models.PositiveSmallIntegerField(
         'Количество ингредиента',
@@ -128,7 +129,7 @@ class Favorite(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='favorites_user',
-        verbose_name='Пользователь'        
+        verbose_name='Пользователь'
     )
     recipe = models.ForeignKey(
         Recipe,
@@ -150,14 +151,13 @@ class ShoppingCart(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='carts',
+        related_name='shopping_cart',
         verbose_name='Пользователь'
-        
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='carts',
+        related_name='shopping_cart',
         verbose_name='Рецепт',
     )
 
@@ -166,5 +166,5 @@ class ShoppingCart(models.Model):
         verbose_name_plural = 'Корзина'
         constraints = [
             models.UniqueConstraint(fields=['user', 'recipe'],
-                                    name='unique shopping cart')
+                                    name='unique shopping_cart')
         ]

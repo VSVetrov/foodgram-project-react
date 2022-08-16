@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import User, Follow
+from .models import User
 
 
 class CustomUserAdmin(UserAdmin):
@@ -10,11 +10,5 @@ class CustomUserAdmin(UserAdmin):
         'is_superuser', 'is_active', 'groups'
     )
 
-admin.site.register(User, CustomUserAdmin)
 
-@admin.register(Follow)
-class FollowAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'author')
-    search_fields = ('user', 'author')
-    list_filter = ('user', 'author')
-    empty_value_display = '-пусто-'
+admin.site.register(User, CustomUserAdmin)
