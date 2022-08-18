@@ -67,7 +67,7 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_frontend:v.1
             sudo docker-compose stop
             sudo docker-compose rm backend
-            rm .env
+            sudo rm .env
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env 
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env 
@@ -79,6 +79,7 @@ jobs:
             sudo docker-compose exec -T backend python manage.py makemigrations
             sudo docker-compose exec -T backend python manage.py migrate
             sudo docker-compose exec -T backend python manage.py collectstatic --no-input
-            
+            sudo docker-compose exec backend python manage.py imprint_initial_data
+
             sudo docker system prune -af
             sudo docker volume prune -f
