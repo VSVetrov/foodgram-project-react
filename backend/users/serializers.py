@@ -2,6 +2,7 @@ from api.models import Recipe
 from django.contrib.auth import get_user_model
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
+
 from .models import Follow
 
 User = get_user_model()
@@ -19,10 +20,9 @@ class UserSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         request_user = self.context.get('request').user.id
-        queryset = Follow.objects.filter(
+        return Follow.objects.filter(
             user=request_user, author=obj.id
         ).exists()
-        return queryset
 
 
 class UserCreateSerializer(UserCreateSerializer):
@@ -73,10 +73,9 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
     def get_is_subscribed(self, obj):
         request_user = self.context.get('request').user.id
-        queryset = Follow.objects.filter(
+        return Follow.objects.filter(
             user=request_user, author=obj.id
         ).exists()
-        return queryset
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()
