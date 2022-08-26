@@ -28,7 +28,6 @@ services:
     ports:
       - "8000:8000"
     volumes:
-     # - ../backend:/app/
       - static_value:/app/static/
       - media_value:/app/media/
     env_file:
