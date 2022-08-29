@@ -54,19 +54,16 @@ class Recipe(models.Model):
     )
     name = models.CharField(
         max_length=256,
-        unique=True,
-        help_text='Назовите блюдо'
+        unique=True    
     )
     image = models.ImageField(
         upload_to='recipes/',
-        verbose_name='Картинка рецепта',
-        help_text='Добавьте картинку'
+        verbose_name='Картинка рецепта'        
     )
     text = models.TextField(help_text='Запишите рецепт')
     ingredients = models.ManyToManyField(
         Ingredient,
-        related_name='recipes',
-        help_text='Выберите состав блюда'
+        related_name='recipes'        
     )
     tags = models.ManyToManyField(
         Tag,
@@ -96,15 +93,12 @@ class IngredientAmount(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        verbose_name='Рецепт',
-        related_name='ingredientsamount'
+        verbose_name='Рецепт'
     )
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        verbose_name='Ингредиент',
-        related_name='ingredientsamount'
-
+        verbose_name='Ингредиент'
     )
     amount = models.PositiveSmallIntegerField(
         'Количество ингредиента',
