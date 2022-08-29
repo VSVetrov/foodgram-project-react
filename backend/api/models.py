@@ -54,16 +54,16 @@ class Recipe(models.Model):
     )
     name = models.CharField(
         max_length=256,
-        unique=True    
+        unique=True
     )
     image = models.ImageField(
         upload_to='recipes/',
-        verbose_name='Картинка рецепта'        
+        verbose_name='Картинка рецепта'
     )
     text = models.TextField(help_text='Запишите рецепт')
     ingredients = models.ManyToManyField(
         Ingredient,
-        related_name='recipes'        
+        related_name='recipes'
     )
     tags = models.ManyToManyField(
         Tag,
