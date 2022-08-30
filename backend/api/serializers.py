@@ -78,7 +78,7 @@ class RecipeSerializer(serializers.ModelSerializer):
                     'Ингредиенты должны быть уникальными'
                 )
             ingredient_list.append(ingredient)
-        data['ingredients'] = ingredients
+            data['ingredients'] = ingredients
         return data
 
     def create_ingredients(self, recipe, ingredients):
