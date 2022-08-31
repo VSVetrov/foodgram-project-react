@@ -85,9 +85,6 @@ class Recipe(models.Model):
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
-    def __str__(self):
-        return self.username
-
 
 class IngredientAmount(models.Model):
     recipe = models.ForeignKey(
