@@ -10,7 +10,7 @@ class TagAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-class IngredientAmountAdmin(admin.ModelAdmin):
+class IngredientAmountAdmin(admin.StackedInline):
     model = IngredientAmount
     list_display = ('id', 'ingredient', 'recipe', 'amount')
     empty_value_display = '-пусто-'
