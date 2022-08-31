@@ -10,7 +10,8 @@ class TagAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-class IngredientAmountAdmin(admin.StackedInline):
+@admin.register(IngredientAmount)
+class IngredientAmountAdmin(admin.ModelAdmin):
     model = IngredientAmount
     list_display = ('id', 'ingredient', 'recipe', 'amount')
     empty_value_display = '-пусто-'
@@ -30,7 +31,6 @@ class RecipeAdmin(admin.ModelAdmin):
                     'amount_tags', 'amount_ingredients')
     list_filter = ('author', 'name', 'tags')
     search_fields = ('name',)
-    inlines = (IngredientAmountAdmin,)
     empty_value_display = '-пусто-'
 
     @staticmethod
