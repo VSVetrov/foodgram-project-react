@@ -10,6 +10,12 @@ class TagAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
+@admin.register(IngredientAmount)
+class IngredientAmountAdmin(admin.ModelAdmin):
+    list_display = ('id', 'ingredient', 'recipe', 'amount')
+    empty_value_display = '-пусто-'
+
+
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'measurement_unit')
@@ -24,6 +30,7 @@ class RecipeAdmin(admin.ModelAdmin):
                     'amount_tags', 'amount_ingredients')
     list_filter = ('author', 'name', 'tags')
     search_fields = ('name',)
+    inlines = (IngredientAmountAdmin,)
     empty_value_display = '-пусто-'
 
     @staticmethod
@@ -37,12 +44,6 @@ class RecipeAdmin(admin.ModelAdmin):
     @staticmethod
     def amount_ingredients(obj):
         return '\n'.join([i[0] for i in obj.ingredients.values_list('name')])
-
-
-@admin.register(IngredientAmount)
-class IngredientAmountAdmin(admin.ModelAdmin):
-    list_display = ('id', 'ingredient', 'recipe', 'amount')
-    empty_value_display = '-пусто-'
 
 
 @admin.register(Favorite)
