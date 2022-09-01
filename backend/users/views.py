@@ -1,5 +1,3 @@
-from api.pagination import CustomPageNumberPagination
-from api.permissions import IsAuthorOrAdminOrReadOnly
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
@@ -7,6 +5,9 @@ from rest_framework import permissions, status
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
+
+from api.pagination import CustomPageNumberPagination
+from api.permissions import IsAuthorOrAdminOrReadOnly
 
 from .models import Follow
 from .serializers import SubscriptionSerializer, UserSerializer

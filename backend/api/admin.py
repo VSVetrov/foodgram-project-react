@@ -34,7 +34,7 @@ class RecipeAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     empty_value_display = '-пусто-'
     amount = models.IntegerField(validators=[MinValueValidator(0)])
-                      
+
     @staticmethod
     def amount_favorites(obj):
         return obj.favorites.count()
@@ -46,6 +46,7 @@ class RecipeAdmin(admin.ModelAdmin):
     @staticmethod
     def amount_ingredients(obj):
         return '\n'.join([i[0] for i in obj.ingredients.values_list('name')])
+
 
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
