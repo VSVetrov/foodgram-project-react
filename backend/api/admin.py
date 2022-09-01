@@ -29,7 +29,7 @@ class IngredientAdmin(admin.ModelAdmin):
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'author', 'amount_favorites',
-                    'amount_tags', 'amount_ingredients')
+                    'amount_tags', 'amount_ingredients', 'amount_amount')
     list_filter = ('author', 'name', 'tags')
     search_fields = ('name',)
     empty_value_display = '-пусто-'
@@ -45,9 +45,11 @@ class RecipeAdmin(admin.ModelAdmin):
 
     @staticmethod
     def amount_ingredients(obj):
-        return '\n'.join([i[0] for i in obj.ingredients.values_list(
-            'name', 'amount, measurement_unit'
-        )])
+        return '\n'.join([i[0] for i in obj.ingredients.values_list('name')])
+
+    @staticmethod
+    def amount_amount(obj):
+        return obj.ingredients.count()
 
 
 @admin.register(Favorite)
