@@ -1,6 +1,4 @@
 from django.contrib import admin
-from django.core.validators import MinValueValidator
-from django.db import models
 
 from .models import (Favorite, Ingredient, IngredientAmount, Recipe,
                      ShoppingCart, Tag)
@@ -34,7 +32,7 @@ class RecipeAdmin(admin.ModelAdmin):
     list_filter = ('author', 'name', 'tags')
     search_fields = ('name',)
     empty_value_display = '-пусто-'
-    inlines = [IngredientAmountAdmin,]
+    inlines = [IngredientAmountAdmin]
 
     @staticmethod
     def amount_favorites(obj):
