@@ -13,7 +13,8 @@ class TagAdmin(admin.ModelAdmin):
 
 
 @admin.register(IngredientAmount)
-class IngredientAmountAdmin(admin.ModelAdmin):
+class IngredientAmountAdmin(admin.TabularInline):
+    model = IngredientAmount
     list_display = ('id', 'ingredient', 'recipe', 'amount')
     empty_value_display = '-пусто-'
 
@@ -33,7 +34,7 @@ class RecipeAdmin(admin.ModelAdmin):
     list_filter = ('author', 'name', 'tags')
     search_fields = ('name',)
     empty_value_display = '-пусто-'
-    amount = models.IntegerField(validators=[MinValueValidator(0)])
+    inlines = [IngredientAmountAdmin,]
 
     @staticmethod
     def amount_favorites(obj):
