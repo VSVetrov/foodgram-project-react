@@ -53,6 +53,7 @@ class RecipeAdmin(admin.ModelAdmin):
                 'ingredient__name',
                 'amount', 'ingredient__measurement_unit')])
 
+
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'recipe')
