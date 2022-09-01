@@ -1,6 +1,6 @@
 from django.contrib import admin
-from django.db import models
 from django.core.validators import MinValueValidator
+from django.db import models
 
 from .models import (Favorite, Ingredient, IngredientAmount, Recipe,
                      ShoppingCart, Tag)
