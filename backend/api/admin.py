@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.core.validators import MinValueValidator
+from django.db import models
 
 from .models import (Favorite, Ingredient, IngredientAmount, Recipe,
                      ShoppingCart, Tag)
@@ -11,8 +13,7 @@ class TagAdmin(admin.ModelAdmin):
 
 
 @admin.register(IngredientAmount)
-class IngredientAmountAdmin(admin.TabularInline):
-    model = IngredientAmount
+class IngredientAmountAdmin(admin.ModelAdmin):
     list_display = ('id', 'ingredient', 'recipe', 'amount')
     empty_value_display = '-пусто-'
 
@@ -32,7 +33,7 @@ class RecipeAdmin(admin.ModelAdmin):
     list_filter = ('author', 'name', 'tags')
     search_fields = ('name',)
     empty_value_display = '-пусто-'
-    inlines = [IngredientAmountAdmin]
+    amount = models.IntegerField(validators=[MinValueValidator(1)])
 
     @staticmethod
     def amount_favorites(obj):
