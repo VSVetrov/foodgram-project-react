@@ -45,7 +45,9 @@ class RecipeAdmin(admin.ModelAdmin):
 
     @staticmethod
     def amount_ingredients(obj):
-        return '\n'.join([i[0] for i in obj.ingredients.values_list('name')])
+        return '\n'.join([i[0] for i in obj.ingredients.values_list(
+            'name', 'amount, measurement_unit'
+            )])
 
 
 @admin.register(Favorite)
