@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.db import models
+from django.core.validators import MinValueValidator
 
 from .models import (Favorite, Ingredient, IngredientAmount, Recipe,
                      ShoppingCart, Tag)
@@ -31,7 +33,8 @@ class RecipeAdmin(admin.ModelAdmin):
     list_filter = ('author', 'name', 'tags')
     search_fields = ('name',)
     empty_value_display = '-пусто-'
-
+    amount = models.IntegerField(validators=[MinValueValidator(0)])
+                      
     @staticmethod
     def amount_favorites(obj):
         return obj.favorites.count()
@@ -43,16 +46,6 @@ class RecipeAdmin(admin.ModelAdmin):
     @staticmethod
     def amount_ingredients(obj):
         return '\n'.join([i[0] for i in obj.ingredients.values_list('name')])
-
-    @admin.display(description=' Ингредиенты ')
-    def get_ingredients(self, obj):
-        return '\n '.join([
-            f'{item["ingredient__name"]} - {item["amount"]}'
-            f' {item["ingredient__measurement_unit"]}.'
-            for item in obj.recipe.values(
-                'ingredient__name',
-                'amount', 'ingredient__measurement_unit')])
-
 
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
