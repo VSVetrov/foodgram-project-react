@@ -54,26 +54,33 @@ class Recipe(models.Model):
     )
     name = models.CharField(
         max_length=256,
+        verbose_name='Название рецепта',
         unique=True
     )
     image = models.ImageField(
         upload_to='recipes/',
         verbose_name='Картинка рецепта'
     )
-    text = models.TextField(help_text='Запишите рецепт')
+    text = models.TextField(
+        help_text='Запишите рецепт',
+        verbose_name='Описание'
+    )
     ingredients = models.ManyToManyField(
         Ingredient,
-        related_name='recipes'
+        related_name='recipes',
+        verbose_name='Ингредиент'
     )
     tags = models.ManyToManyField(
         Tag,
-        related_name='recipes'
+        related_name='recipes',
+        verbose_name='Тэги'
     )
     cooking_time = models.PositiveSmallIntegerField(
         validators=(
             MinValueValidator(
                 1, message='Время должно быть больше 1 минуты'),),
-        help_text='Время приготовления в минутах'
+        help_text='Время приготовления в минутах',
+        verbose_name='Время приготовления'
     )
     pub_date = models.DateTimeField(
         'Дата публикации',
