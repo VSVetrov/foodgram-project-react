@@ -30,7 +30,7 @@ class RecipeAdmin(admin.ModelAdmin):
     list_filter = ('author', 'name', 'tags')
     search_fields = ('name',)
     inlines = [IngredientAmountAdmin, ]
-    exclude = 'ingredient'
+    exclude = 'ingredients'
     empty_value_display = '-пусто-'
 
     @staticmethod
