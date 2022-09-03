@@ -26,7 +26,7 @@ class IngredientAmountAdmin(admin.TabularInline):
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'author', 'amount_favorites',
-                    'amount_tags', 'amount_ingredients', 'inlines')
+                    'amount_tags', 'amount_ingredients')
     list_filter = ('author', 'name', 'tags')
     search_fields = ('name',)
     exclude = ('ingredients',)
