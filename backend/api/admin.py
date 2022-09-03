@@ -20,7 +20,7 @@ class IngredientAdmin(admin.ModelAdmin):
 
 class IngredientAmountAdmin(admin.TabularInline):
     model = IngredientAmount
-    extra = 1
+    autocomplete_fields = ('ingredient',)
 
 
 @admin.register(Recipe)
