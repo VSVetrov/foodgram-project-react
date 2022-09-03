@@ -60,7 +60,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         ingredients = data['ingredientsamount']
         if not ingredients:
             raise serializers.ValidationError({
-                'ingredients': 'Добавьте хотя бы один ингредиент'})
+                'ingredients': ('Добавьте хотя бы один ингредиент')})
         ingredient_list = []
         for ingredient_item in ingredients:
             ingredient = get_object_or_404(
