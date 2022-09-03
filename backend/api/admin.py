@@ -30,8 +30,8 @@ class RecipeAdmin(admin.ModelAdmin):
     list_filter = ('author', 'name', 'tags')
     search_fields = ('name',)
     exclude = ('ingredients',)
-    empty_value_display = '-пусто-'
     inlines = [IngredientAmountAdmin, ]
+    empty_value_display = '-пусто-'
 
     @staticmethod
     def amount_favorites(obj):
