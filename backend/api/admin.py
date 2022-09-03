@@ -30,9 +30,9 @@ class RecipeAdmin(admin.ModelAdmin):
     list_filter = ('author', 'name', 'tags')
     search_fields = ('name',)
     exclude = ('ingredients',)
-    inlines = [IngredientAmountAdmin, ]
     empty_value_display = '-пусто-'
-
+    inlines = [IngredientAmountAdmin, ]
+ 
     @staticmethod
     def amount_favorites(obj):
         return obj.favorites.count()
