@@ -4,6 +4,16 @@ from .models import (Favorite, Ingredient, IngredientAmount, Recipe,
                      ShoppingCart, Tag)
 
 
+class MinValidatedInlineMixIn:
+    validate_min = True
+    def get_formset(self, *args, **kwargs):
+        return super().get_formset(
+            validate_min=self.validate_min,
+             *args,
+             **kwargs
+        )
+
+
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'slug')
@@ -18,8 +28,10 @@ class IngredientAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-class IngredientAmountAdmin(admin.TabularInline):
+class IngredientAmountAdmin(MinValidatedInlineMixIn, admin.TabularInline):
     model = IngredientAmount
+    min_num = 1
+    validate_min = True
     extra = 1
 
 
