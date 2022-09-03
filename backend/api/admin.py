@@ -20,7 +20,7 @@ class IngredientAdmin(admin.ModelAdmin):
 
 class IngredientAmountAdmin(admin.TabularInline):
     model = IngredientAmount
-    autocomplete_fields = ('ingredient',)
+    extra = 1
 
 
 @admin.register(Recipe)
@@ -30,6 +30,7 @@ class RecipeAdmin(admin.ModelAdmin):
     list_filter = ('author', 'name', 'tags')
     search_fields = ('name',)
     inlines = [IngredientAmountAdmin, ]
+    exclude = 'ingredients'
     empty_value_display = '-пусто-'
 
     @staticmethod
