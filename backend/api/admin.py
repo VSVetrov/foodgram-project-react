@@ -32,7 +32,7 @@ class RecipeAdmin(admin.ModelAdmin):
     exclude = ('ingredients',)
     empty_value_display = '-пусто-'
     inlines = [IngredientAmountAdmin, ]
- 
+
     @staticmethod
     def amount_favorites(obj):
         return obj.favorites.count()
