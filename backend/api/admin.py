@@ -6,12 +6,10 @@ from .models import (Favorite, Ingredient, IngredientAmount, Recipe,
 
 class MinValidatedInlineMixIn:
     validate_min = True
+
     def get_formset(self, *args, **kwargs):
-        return super().get_formset(
-            validate_min=self.validate_min,
-             *args,
-             **kwargs
-        )
+        return super().get_formset(validate_min=self.validate_min,
+                                   *args, **kwargs)
 
 
 @admin.register(Tag)
