@@ -1,25 +1,28 @@
-# praktikum_new_diplom
+# Сайт для публикации рецептов Foodgram
 
 ## Стек технологий
 Python, Django, Django REST Framework, NGINX, Docker
 
 ## Описание проекта
-Foodgram это ресурс для публикации рецептов.
 Пользователи могут создавать свои рецепты, читать рецепты других пользователей, подписываться на интересных авторов, добавлять лучшие рецепты в избранное, а также создавать список покупок и загружать его в pdf формате.
 
 ## Установка проекта
-- скопировать репозиторий на локальную машину
-- запустить виртуальное окружение 
+- Скопировать репозиторий на локальную машину
+- Запустить виртуальное окружение 
+    `
     python -m venv env
-    . venv/scripts/activate
+    `
+```
+. venv/scripts/activate
+```
 - Cоздайте файл .env в директории /infra/ с содержанием:
-SECRET_KEY=секретный ключ django
-DB_ENGINE=django.db.backends.postgresql
-DB_NAME=postgres
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-DB_HOST=db
-DB_PORT=5432
+    SECRET_KEY=секретный ключ django
+    DB_ENGINE=django.db.backends.postgresql
+    DB_NAME=postgres
+    POSTGRES_USER=postgres
+    POSTGRES_PASSWORD=postgres
+    DB_HOST=db
+    DB_PORT=5432
 
 - Перейти в директирию и установить зависимости из файла requirements.txt:
     pip install -r requirements.txt 
@@ -34,12 +37,14 @@ DB_PORT=5432
 При необходимости добавьте/измените адреса проекта в файле nginx.conf
 
 - Запустите docker compose
-    docker-compose up -d --build
+```
+docker-compose up -d --build
+```
 
--После сборки появляются 3 контейнера:
-    контейнер базы данных db
-    контейнер приложения backend
-    контейнер web-сервера nginx
+- После сборки появляются 3 контейнера:
+    - контейнер базы данных db
+- контейнер приложения backend
+- контейнер web-сервера nginx
 
 ## Права администратора
 Для проверки работоспобности админа
